@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
 import Movie from '../models/Movie';
 import User from '../models/User';
 import Comment from '../models/Comment';
+
 
 dotenv.config();
 

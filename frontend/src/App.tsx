@@ -13,16 +13,16 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <div>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<PrivateRoute component={Admin} />} />
-          </Routes>
-        </div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/movie/:id" element={<MovieDetail />} />
+          <Route path="/login" element={<Login />} />
+          <Route element={<PrivateRoute roles={['admin']} />}>
+            <Route path="/admin" element={<Admin />} />
+          </Route>
+        </Routes>
       </Router>
     </AuthProvider>
   );
