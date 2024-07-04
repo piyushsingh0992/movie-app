@@ -1,9 +1,15 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import Movie from '../models/Movie';
 import User from '../models/User';
+import Comment from '../models/Comment';
 
-const MONGO_URI = 'mongodb+srv://piyushsingh0992:jzA7ydDWSoHJ54rZ@cluster0.lpflprd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+dotenv.config();
+
+const MONGO_URI = process.env.MONGO_URI || '';
+
+mongoose.set('strictQuery', true);
 
 mongoose.connect(MONGO_URI)
   .then(() => {
@@ -17,6 +23,7 @@ const seedDatabase = async () => {
     // Clear existing data
     await Movie.deleteMany({});
     await User.deleteMany({});
+    await Comment.deleteMany({});
 
     // Add movies
     const movies = [
@@ -32,7 +39,7 @@ const seedDatabase = async () => {
       { name: 'Andhadhun', description: 'A series of mysterious events change the life of a blind pianist.', runningTime: '139 min', imageUrl: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Andhadhun_poster.jpg' }
     ];
 
-    await Movie.insertMany(movies);
+    const insertedMovies = await Movie.insertMany(movies);
     console.log('Movies added');
 
     // Add users
@@ -43,8 +50,25 @@ const seedDatabase = async () => {
       { username: 'user3', password: await bcrypt.hash('user123', 10), role: 'user', favorites: [] }
     ];
 
-    await User.insertMany(users);
+    const insertedUsers = await User.insertMany(users);
     console.log('Users added');
+
+    // Add comments
+    const comments = [
+      { text: 'Great movie!', movie: insertedMovies[0]._id, user: insertedUsers[1]._id },
+      { text: 'Loved it!', movie: insertedMovies[1]._id, user: insertedUsers[2]._id },
+      { text: 'Fantastic!', movie: insertedMovies[2]._id, user: insertedUsers[3]._id },
+      { text: 'Amazing story!', movie: insertedMovies[3]._id, user: insertedUsers[1]._id },
+      { text: 'Incredible visuals!', movie: insertedMovies[4]._id, user: insertedUsers[2]._id },
+      { text: 'Highly recommended!', movie: insertedMovies[5]._id, user: insertedUsers[3]._id },
+      { text: 'Worth watching!', movie: insertedMovies[6]._id, user: insertedUsers[1]._id },
+      { text: 'A must see!', movie: insertedMovies[7]._id, user: insertedUsers[2]._id },
+      { text: 'Brilliant!', movie: insertedMovies[8]._id, user: insertedUsers[3]._id },
+      { text: 'Superb!', movie: insertedMovies[9]._id, user: insertedUsers[1]._id }
+    ];
+
+    await Comment.insertMany(comments);
+    console.log('Comments added');
 
     mongoose.disconnect();
     console.log('MongoDB disconnected');

@@ -82,3 +82,16 @@ export const deleteComment = async (req: CustomRequest, res: Response): Promise<
     res.status(500).json({ message: errMsg });
   }
 };
+
+
+export const getComments = async (req: Request, res: Response): Promise<void> => {
+  const { movieId } = req.params;
+
+  try {
+    const comments = await Comment.find({ movie: movieId }).populate('user', 'username');
+    res.status(200).json(comments);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : 'Unknown error';
+    res.status(500).json({ message: errMsg });
+  }
+};
