@@ -4,16 +4,23 @@ import Comment from '../models/Comment';
 import { Types } from 'mongoose';
 import User from '../models/User';
 
-// Custom request type to include user
 interface CustomRequest extends Request {
   user?: {
     id: string;
+    role: string;
   };
 }
 
 export const getMovies = async (req: Request, res: Response): Promise<void> => {
   try {
-    const movies = await Movie.find().populate('comments');
+    const movies = await Movie.find().populate({
+      path: 'comments',
+      populate: {
+        path: 'user',
+        model: 'User',
+        select: 'username'
+      }
+    });
     res.status(200).json(movies);
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -28,22 +35,18 @@ export const getMovieById = async (req: Request, res: Response): Promise<void> =
         path: 'comments',
         populate: {
           path: 'user',
-          model: 'User' ,
+          model: 'User',
           select: 'username'
         }
       });
-
 
     if (!movie) {
       res.status(404).json({ message: 'Movie not found' });
       return;
     }
 
-    console.log(" req.params.id ->", req.params.id);
-    console.log("User ->",User);
     const usersWhoLiked = await User.find({ favorites: req.params.id }).select('username');
-    console.log("usersWhoLiked ->",usersWhoLiked);
-    res.status(200).json({movie:movie,usersWhoLiked});
+    res.status(200).json({ movie, usersWhoLiked });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({ message: errMsg });
@@ -62,6 +65,7 @@ export const addMovie = async (req: CustomRequest, res: Response): Promise<void>
     res.status(500).json({ message: errMsg });
   }
 };
+
 export const addComment = async (req: CustomRequest, res: Response): Promise<void> => {
   const { text } = req.body;
   const { id } = req.params;
@@ -80,10 +84,9 @@ export const addComment = async (req: CustomRequest, res: Response): Promise<voi
       movie.comments.push(savedComment._id);
       await movie.save();
 
-      // Populate the user field in the saved comment before sending the response
       const populatedComment = await Comment.findById(savedComment._id).populate({
         path: 'user',
-        model: 'User' ,
+        model: 'User',
         select: 'username'
       });
 
@@ -109,5 +112,3 @@ export const deleteComment = async (req: CustomRequest, res: Response): Promise<
     res.status(500).json({ message: errMsg });
   }
 };
-
-
