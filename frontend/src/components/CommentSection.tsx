@@ -43,7 +43,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ movieId, comments: init
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
-      {comments.map(comment => (
+      {comments?.map(comment => (
         <div key={comment._id} className="bg-gray-100 p-4 rounded-lg mb-4 shadow">
           <p>{comment.text}</p>
           <p className="text-sm text-gray-600">by {comment.user.username}</p>

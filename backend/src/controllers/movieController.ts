@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import Movie from '../models/Movie';
 import Comment from '../models/Comment';
 import { Types } from 'mongoose';
+import User from '../models/User';
 
 // Custom request type to include user
 interface CustomRequest extends Request {
@@ -31,7 +32,18 @@ export const getMovieById = async (req: Request, res: Response): Promise<void> =
           select: 'username'
         }
       });
-    res.status(200).json(movie);
+
+
+    if (!movie) {
+      res.status(404).json({ message: 'Movie not found' });
+      return;
+    }
+
+    console.log(" req.params.id ->", req.params.id);
+    console.log("User ->",User);
+    const usersWhoLiked = await User.find({ favorites: req.params.id }).select('username');
+    console.log("usersWhoLiked ->",usersWhoLiked);
+    res.status(200).json({movie:movie,usersWhoLiked});
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Unknown error';
     res.status(500).json({ message: errMsg });
