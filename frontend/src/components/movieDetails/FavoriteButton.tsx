@@ -6,12 +6,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 interface FavoriteButtonProps {
   movieId: string;
   isFavorite: boolean;
- 
 }
 
-const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId, isFavorite,  }) => {
+const FavoriteButton: React.FC<FavoriteButtonProps> = ({
+  movieId,
+  isFavorite,
+}) => {
   const { user } = useAuth();
-  const [markedFavorite,setMarkedFavorite]=useState(false);
+  const [markedFavorite, setMarkedFavorite] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,18 +28,20 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId, isFavorite,  }
 
     axiosInstance({
       method: method,
-      url: url
+      url: url,
     })
-      .then(response => setMarkedFavorite(!markedFavorite))
-      .catch(error => console.error(error));
+      .then((response) => setMarkedFavorite(!markedFavorite))
+      .catch((error) => console.error(error));
   };
 
-  useEffect(()=>{setMarkedFavorite(isFavorite)},[isFavorite])
+  useEffect(() => {
+    setMarkedFavorite(isFavorite);
+  }, [isFavorite]);
 
   return (
     <button
       onClick={toggleFavorite}
-      className={`px-4 py-2 rounded-lg ${markedFavorite? 'bg-red-500 text-white' : 'bg-blue-500 text-white'} transition duration-300 ease-in-out transform hover:scale-105`}
+      className={`px-4 py-2 rounded-lg ${markedFavorite ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'} transition duration-300 ease-in-out transform hover:scale-105`}
     >
       {markedFavorite ? 'Unmark as Favorite' : 'Mark as Favorite'}
     </button>

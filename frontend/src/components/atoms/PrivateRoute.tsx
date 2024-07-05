@@ -12,7 +12,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ roles }) => {
 
   if (loading) {
     // Show a loading indicator or spinner while loading
-    return <LoadingScreen/>
+    return <LoadingScreen />;
   }
 
   if (!user) {

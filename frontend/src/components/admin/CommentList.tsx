@@ -1,9 +1,7 @@
-
 // CommentList.tsx
 import React from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { useAuth } from '../../contexts/AuthContext';
-
 
 interface User {
   _id: string;
@@ -22,20 +20,25 @@ interface CommentListProps {
   onCommentDeleted: (commentId: string) => void;
 }
 
-const CommentList: React.FC<CommentListProps> = ({ movieId, comments, onCommentDeleted }) => {
+const CommentList: React.FC<CommentListProps> = ({
+  movieId,
+  comments,
+  onCommentDeleted,
+}) => {
   const { user } = useAuth();
 
   const deleteComment = (commentId: string) => {
     if (user && user.role === 'admin') {
-      axiosInstance.delete(`/api/movies/${movieId}/comments/${commentId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      axiosInstance
+        .delete(`/api/movies/${movieId}/comments/${commentId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
         .then(() => {
           onCommentDeleted(commentId);
         })
-        .catch(error => console.error(error));
+        .catch((error) => console.error(error));
     }
   };
 
@@ -45,9 +48,15 @@ const CommentList: React.FC<CommentListProps> = ({ movieId, comments, onCommentD
       {comments.length === 0 ? (
         <p className="text-gray-500">No comments yet.</p>
       ) : (
-        comments.map(comment => (
-          <div key={comment._id} className="mb-4 p-4 border rounded-lg bg-gray-50">
-            <p className="text-gray-700">{comment.text} - <em className="text-gray-500">{comment.user.username}</em></p>
+        comments.map((comment) => (
+          <div
+            key={comment._id}
+            className="mb-4 p-4 border rounded-lg bg-gray-50"
+          >
+            <p className="text-gray-700">
+              {comment.text} -{' '}
+              <em className="text-gray-500">{comment.user.username}</em>
+            </p>
             {user && user.role === 'admin' && (
               <button
                 onClick={() => deleteComment(comment._id)}

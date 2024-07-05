@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -22,8 +22,6 @@ const Login: React.FC = () => {
     if (location.state && (location.state as LocationState).from) {
       setRedirectPath((location.state as LocationState).from!.pathname);
     }
-
-
   }, [location.state]);
 
   useEffect(() => {
@@ -58,17 +56,17 @@ const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sign In</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Sign In
+        </h2>
         <div className="mb-4 h-6">
-          {error && (
-            <div className="text-red-500 text-center">
-              {error}
-            </div>
-          )}
+          {error && <div className="text-red-500 text-center">{error}</div>}
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">Username</label>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">
+              Username
+            </label>
             <input
               type="text"
               value={username}
@@ -79,7 +77,9 @@ const Login: React.FC = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">
+              Password
+            </label>
             <input
               type="password"
               value={password}

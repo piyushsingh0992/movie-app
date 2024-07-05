@@ -6,7 +6,6 @@ import Modal from '../components/atoms/Modal';
 import MovieForm from '../components/admin/MovieForm';
 import MovieList from '../components/admin/MovieList';
 
-
 interface User {
   _id: string;
   username: string;
@@ -35,9 +34,10 @@ const Admin: React.FC = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    axiosInstance.get<Movie[]>('/api/movies')
-      .then(response => setMovies(response.data))
-      .catch(error => setError('Failed to fetch movies'))
+    axiosInstance
+      .get<Movie[]>('/api/movies')
+      .then((response) => setMovies(response.data))
+      .catch((error) => setError('Failed to fetch movies'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -46,15 +46,19 @@ const Admin: React.FC = () => {
   };
 
   const handleCommentDeleted = (movieId: string, commentId: string) => {
-    setMovies(movies.map(movie => {
-      if (movie._id === movieId) {
-        return {
-          ...movie,
-          comments: movie.comments.filter(comment => comment._id !== commentId)
-        };
-      }
-      return movie;
-    }));
+    setMovies(
+      movies.map((movie) => {
+        if (movie._id === movieId) {
+          return {
+            ...movie,
+            comments: movie.comments.filter(
+              (comment) => comment._id !== commentId
+            ),
+          };
+        }
+        return movie;
+      })
+    );
   };
 
   const openModal = () => setIsModalOpen(true);

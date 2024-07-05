@@ -19,33 +19,31 @@ const Favorites: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      axiosInstance.get<Movie[]>('/api/users/favorites', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-      .then(response => setFavorites(response.data))
-      .catch(error => console.error(error));
+      axiosInstance
+        .get<Movie[]>('/api/users/favorites', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((response) => setFavorites(response.data))
+        .catch((error) => console.error(error));
     }
   }, [user]);
 
   if (loading) {
-    return <LoadingScreen/>
+    return <LoadingScreen />;
   }
 
   if (!user) {
-    return (
-      <PleaseLogin/>
-
-    );
+    return <PleaseLogin />;
   }
 
   return (
     <div className="container mx-auto p-4">
       <h1>Favorites</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {favorites.map(movie => (
-      <MovieCard key={movie._id} movie={movie} />
+        {favorites.map((movie) => (
+          <MovieCard key={movie._id} movie={movie} />
         ))}
       </div>
     </div>

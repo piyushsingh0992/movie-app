@@ -19,7 +19,10 @@ interface CommentSectionProps {
   comments: Comment[];
 }
 
-const CommentSection: React.FC<CommentSectionProps> = ({ movieId, comments: initialComments }) => {
+const CommentSection: React.FC<CommentSectionProps> = ({
+  movieId,
+  comments: initialComments,
+}) => {
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState<string>('');
   const { user } = useAuth();
@@ -32,19 +35,23 @@ const CommentSection: React.FC<CommentSectionProps> = ({ movieId, comments: init
       return;
     }
 
-    axiosInstance.post<Comment>(`/api/movies/${movieId}/comments`, { text: newComment })
-      .then(response => {
+    axiosInstance
+      .post<Comment>(`/api/movies/${movieId}/comments`, { text: newComment })
+      .then((response) => {
         setComments([...comments, response.data]);
         setNewComment('');
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
-      {comments?.map(comment => (
-        <div key={comment._id} className="bg-gray-100 p-4 rounded-lg mb-4 shadow">
+      {comments?.map((comment) => (
+        <div
+          key={comment._id}
+          className="bg-gray-100 p-4 rounded-lg mb-4 shadow"
+        >
           <p>{comment.text}</p>
           <p className="text-sm text-gray-600">by {comment.user.username}</p>
         </div>

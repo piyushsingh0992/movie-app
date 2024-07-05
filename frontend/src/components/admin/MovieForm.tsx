@@ -36,28 +36,32 @@ const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
     name: '',
     description: '',
     runningTime: '',
-    imageUrl: ''
+    imageUrl: '',
   };
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Name is required.'),
     description: Yup.string().required('Description is required.'),
     runningTime: Yup.string().required('Running time is required.'),
-    imageUrl: Yup.string().required('Image URL is required.')
+    imageUrl: Yup.string().required('Image URL is required.'),
   });
 
-  const handleSubmit = (values: typeof initialValues, { setSubmitting, setStatus }: any) => {
+  const handleSubmit = (
+    values: typeof initialValues,
+    { setSubmitting, setStatus }: any
+  ) => {
     if (user && user.role === 'admin') {
-      axiosInstance.post<Movie>('/api/movies', values, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
-        .then(response => {
+      axiosInstance
+        .post<Movie>('/api/movies', values, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+        .then((response) => {
           onMovieAdded(response.data);
           onClose();
         })
-        .catch(error => {
+        .catch((error) => {
           setStatus({ submitError: 'Failed to add movie. Please try again.' });
           console.error(error);
         })
@@ -83,7 +87,10 @@ const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
               </div>
             )}
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="name"
+              >
                 Name
               </label>
               <Field
@@ -93,10 +100,17 @@ const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
                 placeholder="Name"
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+              <ErrorMessage
+                name="name"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="description"
+              >
                 Description
               </label>
               <Field
@@ -106,10 +120,17 @@ const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
                 placeholder="Description"
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+              <ErrorMessage
+                name="description"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="runningTime">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="runningTime"
+              >
                 Running Time
               </label>
               <Field
@@ -119,10 +140,17 @@ const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
                 placeholder="Running Time"
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <ErrorMessage name="runningTime" component="div" className="text-red-600 text-sm mt-1" />
+              <ErrorMessage
+                name="runningTime"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUrl">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="imageUrl"
+              >
                 Image URL
               </label>
               <Field
@@ -132,7 +160,11 @@ const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
                 placeholder="Image URL"
                 className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <ErrorMessage name="imageUrl" component="div" className="text-red-600 text-sm mt-1" />
+              <ErrorMessage
+                name="imageUrl"
+                component="div"
+                className="text-red-600 text-sm mt-1"
+              />
             </div>
             <div className="flex justify-end space-x-4 mt-8">
               <button
