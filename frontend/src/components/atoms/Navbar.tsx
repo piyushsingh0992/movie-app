@@ -8,7 +8,9 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-blue-600 p-4">
       <div className="container mx-auto flex justify-between items-center">
+      <Link to="/" >
         <div className="text-white font-bold text-xl">MovieApp</div>
+        </Link>
         <div className="flex space-x-4">
           <Link to="/" className="text-white hover:text-gray-300">
             Home
