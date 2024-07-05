@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 
   useEffect(()=>{
-    console.log(" user 1 ->",user)
+
   },[user])
   const login = async (username: string, password: string) => {
     const response = await axiosInstance.post<{ user: User; token: string }>('/api/users/login', { username, password });

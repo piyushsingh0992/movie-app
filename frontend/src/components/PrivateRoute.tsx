@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 interface PrivateRouteProps {
   roles?: string[];
@@ -8,8 +8,6 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ roles }) => {
   const { user } = useAuth();
-
-
 
   if (!user) {
     // Not logged in so redirect to login page

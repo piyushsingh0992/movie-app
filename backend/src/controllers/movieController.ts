@@ -22,7 +22,15 @@ export const getMovies = async (req: Request, res: Response): Promise<void> => {
 
 export const getMovieById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const movie = await Movie.findById(req.params.id).populate('comments');
+    const movie = await Movie.findById(req.params.id)
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'user',
+          model: 'User' ,
+          select: 'username'
+        }
+      });
     res.status(200).json(movie);
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : 'Unknown error';
@@ -84,14 +92,3 @@ export const deleteComment = async (req: CustomRequest, res: Response): Promise<
 };
 
 
-export const getComments = async (req: Request, res: Response): Promise<void> => {
-  const { movieId } = req.params;
-
-  try {
-    const comments = await Comment.find({ movie: movieId }).populate('user', 'username');
-    res.status(200).json(comments);
-  } catch (error) {
-    const errMsg = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ message: errMsg });
-  }
-};

@@ -1,18 +1,36 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import React, { useState ,useEffect} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+
+interface LocationState {
+  from?: {
+    pathname: string;
+  };
+}
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  if (user) {
-    navigate("/");
-  }
+  const location = useLocation();
+  const [redirectPath, setRedirectPath] = useState('/');
+
+  useEffect(() => {
+    if (location.state && (location.state as LocationState).from) {
+      setRedirectPath((location.state as LocationState).from!.pathname);
+    }
+
+
+  }, [location.state]);
+
+  useEffect(() => {
+    if (user) {
+      navigate(redirectPath);
+    }
+  }, [user, navigate, redirectPath]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,17 +38,18 @@ const Login: React.FC = () => {
     setIsSubmitting(true); // Set submitting state
 
     if (!username || !password) {
-      setError("Username and password are required.");
+      setError('Username and password are required.');
       setIsSubmitting(false);
       return;
     }
 
     try {
       await login(username, password);
-      navigate("/");
+
+      navigate(redirectPath);
     } catch (error) {
-      setError("Failed to login. Please check your credentials.");
-      console.error("Failed to login:", error);
+      setError('Failed to login. Please check your credentials.');
+      console.error('Failed to login:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -39,17 +58,17 @@ const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Sign In
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Sign In</h2>
         <div className="mb-4 h-6">
-          {error && <div className="text-red-500 text-center">{error}</div>}
+          {error && (
+            <div className="text-red-500 text-center">
+              {error}
+            </div>
+          )}
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Username
-            </label>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Username</label>
             <input
               type="text"
               value={username}
@@ -60,9 +79,7 @@ const Login: React.FC = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-semibold mb-2">
-              Password
-            </label>
+            <label className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
             <input
               type="password"
               value={password}
@@ -75,12 +92,10 @@ const Login: React.FC = () => {
           <div className="flex items-center justify-between mb-4">
             <button
               type="submit"
-              className={`w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ${
-                isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Logging in..." : "Login"}
+              {isSubmitting ? 'Logging in...' : 'Login'}
             </button>
           </div>
         </form>
