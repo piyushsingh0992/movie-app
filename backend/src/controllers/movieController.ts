@@ -50,7 +50,6 @@ export const addMovie = async (req: CustomRequest, res: Response): Promise<void>
     res.status(500).json({ message: errMsg });
   }
 };
-
 export const addComment = async (req: CustomRequest, res: Response): Promise<void> => {
   const { text } = req.body;
   const { id } = req.params;
@@ -68,7 +67,15 @@ export const addComment = async (req: CustomRequest, res: Response): Promise<voi
     if (movie) {
       movie.comments.push(savedComment._id);
       await movie.save();
-      res.status(201).json(savedComment);
+
+      // Populate the user field in the saved comment before sending the response
+      const populatedComment = await Comment.findById(savedComment._id).populate({
+        path: 'user',
+        model: 'User' ,
+        select: 'username'
+      });
+
+      res.status(201).json(populatedComment);
     } else {
       res.status(404).json({ message: 'Movie not found' });
     }

@@ -13,6 +13,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId, isFavorite, on
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
   const toggleFavorite = () => {
     if (!user) {
       navigate('/login', { state: { from: location } });
@@ -27,7 +28,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId, isFavorite, on
   return (
     <button
       onClick={toggleFavorite}
-      className={`px-4 py-2 rounded ${isFavorite ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}
+      className={`px-4 py-2 rounded-lg ${isFavorite ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'} transition duration-300 ease-in-out transform hover:scale-105`}
     >
       {isFavorite ? 'Unmark Favorite' : 'Mark Favorite'}
     </button>

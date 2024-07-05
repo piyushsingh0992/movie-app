@@ -42,13 +42,17 @@ const MovieDetail: React.FC = () => {
     }
   };
 
-  if (!movie) return <div>Loading...</div>;
+  if (!movie) return <div className="text-center text-xl">Loading...</div>;
 
   return (
     <div className="container mx-auto p-4">
-      <MovieInfo movie={movie} />
-      <FavoriteButton movieId={movie._id} isFavorite={movie.favorite} onToggleFavorite={handleToggleFavorite} />
-      <CommentSection movieId={movie._id} comments={movie.comments} />
+      <div className="bg-gray-100 p-8 rounded-lg shadow-lg">
+        <MovieInfo movie={movie} />
+        <div className="mt-6 flex justify-center">
+          <FavoriteButton movieId={movie._id} isFavorite={movie.favorite} onToggleFavorite={handleToggleFavorite} />
+        </div>
+        <CommentSection movieId={movie._id} comments={movie.comments} />
+      </div>
     </div>
   );
 };

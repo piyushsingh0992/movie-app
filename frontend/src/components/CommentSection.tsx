@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -44,7 +44,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ movieId, comments: init
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
       {comments.map(comment => (
-        <div key={comment._id} className="bg-gray-100 p-4 rounded-lg mb-4">
+        <div key={comment._id} className="bg-gray-100 p-4 rounded-lg mb-4 shadow">
           <p>{comment.text}</p>
           <p className="text-sm text-gray-600">by {comment.user.username}</p>
         </div>
