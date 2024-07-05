@@ -7,19 +7,24 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ roles }) => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    // Show a loading indicator or spinner while loading
+    return <div>Loading...</div>;
+  }
 
   if (!user) {
-    // Not logged in so redirect to login page
+    // Not logged in, redirect to login page
     return <Navigate to="/login" />;
   }
 
   if (roles && !roles.includes(user.role)) {
-    // Role not authorised so redirect to home page
+    // Role not authorized, redirect to home page
     return <Navigate to="/" />;
   }
 
-  // Authorised so return child components
+  // Authorized, return child components
   return <Outlet />;
 };
 

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import axiosInstance from '../api/axiosInstance';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import axiosInstance from '../api/axiosInstance';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 
 interface User {
   _id: string;
@@ -28,123 +30,130 @@ interface MovieFormProps {
 }
 
 const MovieForm: React.FC<MovieFormProps> = ({ onMovieAdded, onClose }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [runningTime, setRunningTime] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
-  const addMovie = () => {
+  const initialValues = {
+    name: '',
+    description: '',
+    runningTime: '',
+    imageUrl: ''
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Name is required.'),
+    description: Yup.string().required('Description is required.'),
+    runningTime: Yup.string().required('Running time is required.'),
+    imageUrl: Yup.string().required('Image URL is required.')
+  });
+
+  const handleSubmit = (values: typeof initialValues, { setSubmitting, setStatus }: any) => {
     if (user && user.role === 'admin') {
-      setLoading(true);
-      setError(null);
-      axiosInstance.post<Movie>('/api/movies', { name, description, runningTime, imageUrl }, {
+      axiosInstance.post<Movie>('/api/movies', values, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
         .then(response => {
           onMovieAdded(response.data);
-          setName('');
-          setDescription('');
-          setRunningTime('');
-          setImageUrl('');
           onClose();
         })
         .catch(error => {
-          setError('Failed to add movie. Please try again.');
+          setStatus({ submitError: 'Failed to add movie. Please try again.' });
           console.error(error);
         })
         .finally(() => {
-          setLoading(false);
+          setSubmitting(false);
         });
     }
   };
 
   return (
-    <div className="max-w-md mx-auto  p-6 bg-white ">
+    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-4">Add a New Movie</h2>
-      {error && (
-        <div className="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-md">
-          {error}
-        </div>
-      )}
-      <div >
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-            Name
-          </label>
-          <input
-            id="name"
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-            Description
-          </label>
-          <textarea
-            id="description"
-
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="runningTime">
-            Running Time
-          </label>
-          <input
-            id="runningTime"
-            type="text"
-            placeholder="Running Time"
-            value={runningTime}
-            onChange={(e) => setRunningTime(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUrl">
-            Image URL
-          </label>
-          <input
-            id="imageUrl"
-            type="text"
-            placeholder="Image URL"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading}
-          />
-        </div>
-      </div>
-      <div className="flex justify-end space-x-4 mt-8">
-        <button
-          onClick={onClose}
-          className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-          disabled={loading}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={addMovie}
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-          disabled={loading}
-        >
-          {loading ? 'Adding...' : 'Add Movie'}
-        </button>
-      </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, status }) => (
+          <Form>
+            {status && status.submitError && (
+              <div className="mb-4 p-4 text-sm text-red-700 bg-red-100 rounded-md">
+                {status.submitError}
+              </div>
+            )}
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                Name
+              </label>
+              <Field
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Name"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+                Description
+              </label>
+              <Field
+                id="description"
+                name="description"
+                as="textarea"
+                placeholder="Description"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="runningTime">
+                Running Time
+              </label>
+              <Field
+                id="runningTime"
+                name="runningTime"
+                type="text"
+                placeholder="Running Time"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage name="runningTime" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="imageUrl">
+                Image URL
+              </label>
+              <Field
+                id="imageUrl"
+                name="imageUrl"
+                type="text"
+                placeholder="Image URL"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <ErrorMessage name="imageUrl" component="div" className="text-red-600 text-sm mt-1" />
+            </div>
+            <div className="flex justify-end space-x-4 mt-8">
+              <button
+                type="button"
+                onClick={onClose}
+                className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                disabled={isSubmitting}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Adding...' : 'Add Movie'}
+              </button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

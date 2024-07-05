@@ -15,15 +15,6 @@ interface Comment {
   user: User;
 }
 
-interface Movie {
-  _id: string;
-  name: string;
-  description: string;
-  runningTime: string;
-  imageUrl: string;
-  comments: Comment[];
-}
-
 interface CommentListProps {
   movieId: string;
   comments: Comment[];
@@ -48,7 +39,7 @@ const CommentList: React.FC<CommentListProps> = ({ movieId, comments, onCommentD
   };
 
   return (
-    <div className="mt-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="mt-10 p-6 bg-white ">
       <h3 className="text-2xl font-semibold mb-4">Comments</h3>
       {comments.length === 0 ? (
         <p className="text-gray-500">No comments yet.</p>
