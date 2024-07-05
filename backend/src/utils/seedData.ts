@@ -195,8 +195,17 @@ const seedDatabase = async () => {
       },
     ];
 
-    await Comment.insertMany(comments);
+  const insertedComments=  await Comment.insertMany(comments);
     console.log("Comments added");
+
+    // Update movies with comments
+    for (const comment of insertedComments) {
+      await Movie.updateOne(
+        { _id: comment.movie },
+        { $push: { comments: comment._id } }
+      );
+    }
+    console.log("Movies updated with comments");
 
     mongoose.disconnect();
     console.log("MongoDB disconnected");
