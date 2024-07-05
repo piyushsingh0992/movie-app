@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import LoadingScreen from './Loading';
 
 interface PrivateRouteProps {
   roles?: string[];
@@ -11,7 +12,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ roles }) => {
 
   if (loading) {
     // Show a loading indicator or spinner while loading
-    return <div>Loading...</div>;
+    return <LoadingScreen/>
   }
 
   if (!user) {

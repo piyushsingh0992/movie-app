@@ -83,3 +83,35 @@ export const getUserProfile = async (req: CustomRequest, res: Response): Promise
     res.status(500).json({ message: errMsg });
   }
 };
+
+
+export const getUserFavorites = async (req: CustomRequest, res: Response): Promise<void> => {
+  if (!req.user) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const user = await User.findById(req.user.id).populate({
+      path: 'favorites',
+      populate: {
+        path: 'comments',
+        populate: {
+          path: 'user',
+          model: 'User',
+          select: 'username'
+        }
+      }
+    });
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+      return;
+    }
+
+    res.status(200).json(user.favorites);
+  } catch (error) {
+    const errMsg = error instanceof Error ? error.message : 'Unknown error';
+    res.status(500).json({ message: errMsg });
+  }
+};

@@ -5,6 +5,7 @@ import MovieInfo from './MovieInfo';
 import CommentSection from './CommentSection';
 import FavoriteButton from './FavoriteButton';
 import { useAuth } from '../contexts/AuthContext';
+import LoadingScreen from './Loading';
 
 interface User {
   _id: string;
@@ -47,7 +48,7 @@ const MovieDetail: React.FC = () => {
   }, [id]);
 
 
-  if (!movie) return <div className="text-center text-xl">Loading...</div>;
+  if (!movie) return <LoadingScreen/>
 
   return (
     <div className="container mx-auto p-4">

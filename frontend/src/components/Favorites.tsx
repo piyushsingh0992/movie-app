@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-
+import MovieCard from './MovieCard';
+import PleaseLogin from './PleaseLogin';
+import LoadingScreen from './Loading';
 
 interface Movie {
   _id: string;
@@ -12,7 +14,8 @@ interface Movie {
 
 const Favorites: React.FC = () => {
   const [favorites, setFavorites] = useState<Movie[]>([]);
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -26,17 +29,23 @@ const Favorites: React.FC = () => {
     }
   }, [user]);
 
+  if (loading) {
+    return <LoadingScreen/>
+  }
+
+  if (!user) {
+    return (
+      <PleaseLogin/>
+
+    );
+  }
+
   return (
-    <div>
+    <div className="container mx-auto p-4">
       <h1>Favorites</h1>
-      <div className="movie-list">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {favorites.map(movie => (
-          <Link key={movie._id} to={`/movie/${movie._id}`}>
-            <div className="movie-thumbnail">
-              <img src={movie.imageUrl} alt={movie.name} />
-              <p>{movie.name}</p>
-            </div>
-          </Link>
+      <MovieCard key={movie._id} movie={movie} />
         ))}
       </div>
     </div>

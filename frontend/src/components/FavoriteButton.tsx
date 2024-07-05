@@ -39,7 +39,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ movieId, isFavorite,  }
       onClick={toggleFavorite}
       className={`px-4 py-2 rounded-lg ${markedFavorite? 'bg-red-500 text-white' : 'bg-blue-500 text-white'} transition duration-300 ease-in-out transform hover:scale-105`}
     >
-      {markedFavorite ? 'Unmark Favorite' : 'Mark Favorite'}
+      {markedFavorite ? 'Unmark as Favorite' : 'Mark as Favorite'}
     </button>
   );
 };
