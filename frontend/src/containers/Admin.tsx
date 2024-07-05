@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { useAuth } from '../contexts/AuthContext';
-import MovieForm from './MovieForm';
-import MovieList from './MovieList';
-import Modal from './Modal';
+import Modal from '../components/atoms/Modal';
+import MovieForm from '../components/admin/MovieForm';
+import MovieList from '../components/admin/MovieList';
+
 
 interface User {
   _id: string;

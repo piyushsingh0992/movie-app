@@ -1,8 +1,9 @@
 
 // CommentList.tsx
 import React from 'react';
-import axiosInstance from '../api/axiosInstance';
-import { useAuth } from '../contexts/AuthContext';
+import axiosInstance from '../../api/axiosInstance';
+import { useAuth } from '../../contexts/AuthContext';
+
 
 interface User {
   _id: string;

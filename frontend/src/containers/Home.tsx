@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { Link } from 'react-router-dom';
-import MovieCard from './MovieCard';
+import MovieCard from '../components/atoms/MovieCard';
+
 
 interface Movie {
   _id: string;

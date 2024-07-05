@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../api/axiosInstance';
-import { useAuth } from '../contexts/AuthContext';
+import axiosInstance from '../../api/axiosInstance';
+import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface FavoriteButtonProps {

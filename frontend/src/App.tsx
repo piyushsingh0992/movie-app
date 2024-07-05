@@ -1,13 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import Favorites from './components/Favorites';
-import MovieDetail from './components/MovieDetail';
-import Admin from './components/Admin';
-import Navbar from './components/Navbar';
-import Login from './components/Login';
-import PrivateRoute from './components/PrivateRoute';
+
+import MovieDetail from './containers/MovieDetail';
+import Login from './containers/Login';
+import PrivateRoute from './components/atoms/PrivateRoute';
 import { AuthProvider } from './contexts/AuthContext';
+import Navbar from './components/atoms/Navbar';
+import Home from './containers/Home';
+import Favorites from './containers/Favorites';
+import Admin from './containers/Admin';
 
 const App: React.FC = () => {
   return (

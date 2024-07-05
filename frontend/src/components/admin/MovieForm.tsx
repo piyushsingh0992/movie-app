@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import axiosInstance from '../api/axiosInstance';
+import { useAuth } from '../../contexts/AuthContext';
+import axiosInstance from '../../api/axiosInstance';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 

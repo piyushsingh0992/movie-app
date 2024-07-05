@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import MovieCard from './MovieCard';
-import PleaseLogin from './PleaseLogin';
-import LoadingScreen from './Loading';
+import LoadingScreen from '../components/atoms/Loading';
+import PleaseLogin from '../components/atoms/PleaseLogin';
+import MovieCard from '../components/atoms/MovieCard';
 
 interface Movie {
   _id: string;

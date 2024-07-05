@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
-import MovieInfo from './MovieInfo';
-import CommentSection from './CommentSection';
-import FavoriteButton from './FavoriteButton';
+import MovieInfo from '../components/movieDetails/MovieInfo';
+import CommentSection from '../components/movieDetails/CommentSection';
+import FavoriteButton from '../components/movieDetails/FavoriteButton';
 import { useAuth } from '../contexts/AuthContext';
-import LoadingScreen from './Loading';
+import LoadingScreen from '../components/atoms/Loading';
 
 interface User {
   _id: string;
